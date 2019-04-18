@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { array } from 'prop-types';
 import { NONAME } from 'dns';
+import { format } from 'util';
 
 class Board extends Component<{}, { board: Array<Array<number>> }> {
     constructor(props: any) {
@@ -9,10 +10,10 @@ class Board extends Component<{}, { board: Array<Array<number>> }> {
         this.state = {
             board: this.createBoard()
         }
-        // this.state.board[0][0] = 2;
-        // this.state.board[0][1] = 2;
-        // this.state.board[0][2] = 2;
-        // this.state.board[0][3] = 2;
+        this.state.board[0][0] = 2;
+        this.state.board[0][1] = 8;
+        this.state.board[0][2] = 4;
+        this.state.board[0][3] = 4;
     }
     
     componentDidMount() {
@@ -31,8 +32,8 @@ class Board extends Component<{}, { board: Array<Array<number>> }> {
 
         if (keyCodes.includes(e.keyCode)) {
             e.preventDefault();
-            console.log(labels[e.keyCode]);
             this.slideNCombine(labels[e.keyCode]);
+            this.addPiece();
         }
     }
 
@@ -112,7 +113,6 @@ class Board extends Component<{}, { board: Array<Array<number>> }> {
             }
         }
         this.setState({board});
-        this.addPiece();
     }
 
     createBoard() {
@@ -161,9 +161,27 @@ class Board extends Component<{}, { board: Array<Array<number>> }> {
         return true;
     }
 
+    format(number: number){
+        let format: any = {
+            padding: '10px'
+        }
+        if (number == 2)
+            format['backgroundColor'] = "purple";
+        if (number == 4)
+            format['backgroundColor'] = "blue";
+        if (number == 8)
+            format['backgroundColor'] = "pink";
+        if (number == 16)
+            format['backgroundColor'] = "pink";
+        if (number == 32)
+            format['backgroundColor'] = "pink";
+        return format;
+    }
+
     render() {
         const padding = {
-            padding: '10px'
+            padding: '10px',
+            backgroundColor: "purple"
         }
 
         const colors = { 0: "none", 2: "pink", 4: "blue" };
@@ -173,10 +191,7 @@ class Board extends Component<{}, { board: Array<Array<number>> }> {
                 {this.state.board.map((i)=>{
                     return <p>
                         {i.map((j)=>{
-                            if (j == 0)
-                                return <span style={{padding: "10px"}}>{j}</span>
-                            if (j !== 0)
-                                return <span style={{padding: "10px", backgroundColor: "pink" }}>{j}</span>
+                            return <span style={this.format(j)}>{j}</span>
                         })}
                     </p>;
                 })}
