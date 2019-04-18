@@ -176,7 +176,7 @@ class Board extends Component<{}, { board: Array<Array<number>> }> {
                             if (j == 0)
                                 return <span style={{padding: "10px"}}>{j}</span>
                             if (j !== 0)
-                                return <span style={{padding: "10px", backgroundColor: }}>{j}</span>
+                                return <span style={{padding: "10px", backgroundColor: "pink" }}>{j}</span>
                         })}
                     </p>;
                 })}
