@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { array } from 'prop-types';
-import { NONAME } from 'dns';
-import { format } from 'util';
+import Tile from './Tile';
 
 class Board extends Component<{}, { board: Array<Array<number>> }> {
     constructor(props: any) {
@@ -195,6 +193,7 @@ class Board extends Component<{}, { board: Array<Array<number>> }> {
                         })}
                     </p>;
                 })}
+                <Tile/>
                 <header className="App-header">
                     <p> Edit <code>src/App.tsx</code> and save to reload.</p>
                     <a
