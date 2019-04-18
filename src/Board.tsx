@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { array } from 'prop-types';
+import { NONAME } from 'dns';
 
 class Board extends Component<{}, { board: Array<Array<number>> }> {
     constructor(props: any) {
@@ -8,12 +9,16 @@ class Board extends Component<{}, { board: Array<Array<number>> }> {
         this.state = {
             board: this.createBoard()
         }
+        // this.state.board[0][0] = 2;
+        // this.state.board[0][1] = 2;
+        // this.state.board[0][2] = 2;
+        // this.state.board[0][3] = 2;
     }
     
     componentDidMount() {
-        this.addPiece();
-        this.addPiece();
         window.addEventListener("keydown", this.handleKeyDown);
+        this.addPiece();
+        this.addPiece();
     }
 
     componentWillUnmount() {
@@ -70,8 +75,8 @@ class Board extends Component<{}, { board: Array<Array<number>> }> {
                 }
             }
         } else if (direction === 'right') {
-            for (let i = 0; i < 4; i++) {
-                for (let j = 0; j < 4; j++) {
+            for (let i = 3; i >= 0; i--) {
+                for (let j = 3; j >= 0; j--) {
                     if (board[i][j] !== 0) {
                         for (let k = j; k < 3; k++) {
                             if (board[i][k+1] === 0) {
@@ -88,8 +93,8 @@ class Board extends Component<{}, { board: Array<Array<number>> }> {
                 }
             }
         } else if (direction === 'down') {
-            for (let i = 0; i < 4; i++) {
-                for (let j = 0; j < 4; j++) {
+            for (let i = 3; i >= 0; i--) {
+                for (let j = 3; j >= 0; j--) {
                     if (board[i][j] !== 0) {
                         for (let k = i; k < 3; k++) {
                             if (board[k+1][j] === 0) {
@@ -129,7 +134,11 @@ class Board extends Component<{}, { board: Array<Array<number>> }> {
         let { board } = this.state;
         let pieceSet = false;
         while (!pieceSet) {
-            if (board[randomX][randomY] !== undefined) {
+            if (this.boardFull()) {
+                console.warn("CANNOT PLACE ANYMORE PIECES?!");
+                break;
+            }
+            if (board[randomX][randomY] == 0) {
                 board[randomX][randomY] = 2;
                 pieceSet = true;
             } else {
@@ -140,14 +149,36 @@ class Board extends Component<{}, { board: Array<Array<number>> }> {
         this.setState({board});
     }
 
+    boardFull() {
+        let test = false;
+        for (let i = 0; i < 4; i++) {
+            for (let j = 0; j < 4; j++) {
+                if (this.state.board[i][j] == 0) {
+                    return test;
+                }
+            }
+        }
+        return true;
+    }
+
     render() {
         const padding = {
             padding: '10px'
         }
+
+        const colors = { 0: "none", 2: "pink", 4: "blue" };
+
         return (
             <div className="App">
                 {this.state.board.map((i)=>{
-                    return <p>{i.map((j)=><span style={padding}>{j}</span>)}</p>;
+                    return <p>
+                        {i.map((j)=>{
+                            if (j == 0)
+                                return <span style={{padding: "10px"}}>{j}</span>
+                            if (j !== 0)
+                                return <span style={{padding: "10px", backgroundColor: }}>{j}</span>
+                        })}
+                    </p>;
                 })}
                 <header className="App-header">
                     <p> Edit <code>src/App.tsx</code> and save to reload.</p>
