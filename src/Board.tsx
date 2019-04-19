@@ -1,13 +1,34 @@
 import React, { Component } from 'react';
-import Tile from './Tile';
+import Game from './Game';
 
-class Board extends Component<{}, { board: Array<Array<number>> }> {
+const Tile: React.SFC<{number?: number}> = (props) => {
+    const styling: any = {
+        width: "50px",
+        height: "50px",
+        display: "inline-block",
+        borderRadius: "10px",
+        verticalAlign: "middle",
+        margin: "0px 10px 0px 10px"
+    };
+    styling['backgroundColor'] = props.number == 2 ? "#33CEFF" : 
+        props.number == 4 ? "#FF3368" : props.number == 8 ? "#3368FF" :
+        props.number == 16 ? "#33CEFF" : props.number == 32 ? "#CA33FF" :
+        props.number == 64 ? "#ff6df3" : props.number == 128 ? "#6433FF" :
+        props.number == 256 ? "#6faeff" : props.number == 512 ? "#FF33CE" :
+        props.number == 1024 ? "#ff6969" : props.number == 2048 ? "#ffd533" : "#ececec";
+    return <span style={styling}><p>{props.number != 0 ? props.number : undefined}</p></span>;
+}
+
+class Board extends Component<{}, { board: Array<Array<number>>, game: any }> {
     constructor(props: any) {
         super(props);
         this.handleKeyDown = this.handleKeyDown.bind(this)
         this.state = {
-            board: this.createBoard()
+            board: this.createBoard(),
+            game: new Game()
         }
+        console.log(this.state.game);
+        this.state.game.addPiece();
         this.state.board[0][0] = 2;
         this.state.board[0][1] = 8;
         this.state.board[0][2] = 4;
@@ -29,6 +50,7 @@ class Board extends Component<{}, { board: Array<Array<number>> }> {
         const labels: any = { 37: 'left', 38: 'up', 39: 'right', 40: 'down' };
 
         if (keyCodes.includes(e.keyCode)) {
+            this.state.game.addPiece();
             e.preventDefault();
             this.slideNCombine(labels[e.keyCode]);
             this.addPiece();
@@ -186,6 +208,7 @@ class Board extends Component<{}, { board: Array<Array<number>> }> {
 
         return (
             <div className="App">
+                <p>Alpha Game Board</p>
                 {this.state.board.map((i)=>{
                     return <p>
                         {i.map((j)=>{
@@ -193,7 +216,29 @@ class Board extends Component<{}, { board: Array<Array<number>> }> {
                         })}
                     </p>;
                 })}
+                <p>Testing the colors of the Tiles</p>
+                <Tile number={2}/>
+                <Tile number={4}/>
+                <Tile number={8}/>
+                <Tile number={16}/>
+                <Tile number={32}/>
+                <Tile number={64}/>
+                <Tile number={128}/>
+                <Tile number={256}/>
+                <Tile number={512}/>
+                <Tile number={1024}/>
+                <Tile number={2048}/>
                 <Tile/>
+
+                <p>Beta Game Board</p>
+                {this.state.game.state.map((i: Array<number>)=>{
+                    return <p>
+                        {i.map((j: number)=>{
+                            return <Tile number={j}/>
+                        })}
+                    </p>;
+                })}
+
                 <header className="App-header">
                     <p> Edit <code>src/App.tsx</code> and save to reload.</p>
                     <a
