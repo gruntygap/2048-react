@@ -28,11 +28,12 @@ class Board extends Component<{}, { board: Array<Array<number>>, game: any }> {
             game: new Game()
         }
         console.log(this.state.game);
-        this.state.game.addPiece();
-        this.state.board[0][0] = 2;
-        this.state.board[0][1] = 8;
+        // this.state.game.addPiece();
+        // this.state.game.addPiece();
+        this.state.board[0][0] = 8;
+        this.state.board[0][1] = 4;
         this.state.board[0][2] = 4;
-        this.state.board[0][3] = 4;
+        this.state.board[0][3] = 2;
     }
     
     componentDidMount() {
@@ -50,10 +51,13 @@ class Board extends Component<{}, { board: Array<Array<number>>, game: any }> {
         const labels: any = { 37: 'left', 38: 'up', 39: 'right', 40: 'down' };
 
         if (keyCodes.includes(e.keyCode)) {
-            this.state.game.addPiece();
             e.preventDefault();
-            this.slideNCombine(labels[e.keyCode]);
-            this.addPiece();
+            // this.state.game.move(labels[e.keyCode]);
+            const newGame = new Game(this.state.game);
+            newGame.move(labels[e.keyCode]);
+            this.setState({game: newGame});
+            // this.slideNCombine(labels[e.keyCode]);
+            // this.addPiece();
         }
     }
 

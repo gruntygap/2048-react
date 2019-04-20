@@ -16,13 +16,35 @@ function createBoard(num: number) {
     return board;
 }
 
+function rotateLeft(matrix: GameState) {
+    let rows = matrix.length;
+    let cols = matrix[0].length;
+    let endState: GameState = [];
+    for (let row = 0; row < rows; ++row) {
+        endState.push([]);
+        for (var column = 0; column < cols; ++column) {
+            endState[row][column] = matrix[column][cols - row - 1];
+        }
+    }
+    return endState;
+}
+
 type GameState = Array<Array<number>>;
 
 class Game {
     state!: GameState;
 
-    constructor(options?: GameState){
-        this.state = options ? options : createBoard(4);
+    constructor(options?: Game){
+        this.state = options ? options.state : createBoard(4);
+        if (!options){
+            this.state[0][0] = 4;
+            this.state[0][1] = 4;
+            this.state[0][2] = 2;
+            this.state[0][3] = 2;
+
+            this.state[1][0] = 2;
+            this.state[1][3] = 2;
+        }
     }
 
     addPiece() {
@@ -58,8 +80,58 @@ class Game {
         return true;
     }
 
-    slide(dir: String) {
-        // need to implement!
+    slideLeft() {
+        let board = this.state;
+        let hasChanged = false;
+        board = board.map((i: Array<number>) => {
+            let min = 0
+            for (let j = 0; j < i.length; j++) {
+                if (i[j] !== 0) {
+                    for (let k = j; k > min; k--) {
+                        if (i[k-1] === 0) {
+                            i[k-1] = i[k];
+                            i[k] = 0;
+                            hasChanged = true;
+                        }
+                        if (i[k-1] === i[k]) {
+                            i[k-1] = i[k-1] + i[k];
+                            min = k-1;
+                            i[k] = 0;
+                            hasChanged = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            return i;
+        });
+        this.state = board;
+        return hasChanged;
+    }
+
+    move(dir: 'left'|'up'|'down'|'left') {
+        let board: GameState = this.state;
+        let hasChanged = false;
+        if (dir == 'left') {
+            hasChanged = this.slideLeft();
+        } else if (dir == 'up') {
+            for (let i = 0; i < 1; i++){
+                board = rotateLeft(this.state);
+            }
+            hasChanged = this.slideLeft();
+            for (var i = 1; i < 4; ++i) {
+                board = rotateLeft(board);
+            }
+        } else if (dir == 'down') {
+            hasChanged = this.slideLeft();
+        } else if (dir == 'right') {
+            hasChanged = this.slideLeft();
+        }
+        if (hasChanged) {
+            this.addPiece();
+        }
+        console.log(board);
+        this.state = board;
     }
 }
 
