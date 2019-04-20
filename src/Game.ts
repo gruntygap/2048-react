@@ -80,8 +80,8 @@ class Game {
         return true;
     }
 
-    slideLeft() {
-        let board = this.state;
+    slideLeft(options?: GameState) {
+        let board = options ? options : this.state;
         let hasChanged = false;
         board = board.map((i: Array<number>) => {
             let min = 0
@@ -116,22 +116,33 @@ class Game {
             hasChanged = this.slideLeft();
         } else if (dir == 'up') {
             for (let i = 0; i < 1; i++){
-                board = rotateLeft(this.state);
+                board = rotateLeft(board);
             }
-            hasChanged = this.slideLeft();
-            for (var i = 1; i < 4; ++i) {
+            hasChanged = this.slideLeft(board);
+            for (let i = 1; i < 4; i++) {
                 board = rotateLeft(board);
             }
         } else if (dir == 'down') {
-            hasChanged = this.slideLeft();
+            for (let i = 0; i < 3; i++){
+                board = rotateLeft(board);
+            }
+            hasChanged = this.slideLeft(board);
+            for (let i = 3; i < 4; i++) {
+                board = rotateLeft(board);
+            }
         } else if (dir == 'right') {
-            hasChanged = this.slideLeft();
+            for (let i = 0; i < 2; i++){
+                board = rotateLeft(board);
+            }
+            hasChanged = this.slideLeft(board);
+            for (let i = 2; i < 4; i++) {
+                board = rotateLeft(board);
+            }
         }
+        this.state = board;
         if (hasChanged) {
             this.addPiece();
         }
-        console.log(board);
-        this.state = board;
     }
 }
 

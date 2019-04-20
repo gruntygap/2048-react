@@ -1,0 +1,13 @@
+.Board {
+    text-align: center;
+    font-size: calc(10px + 1vmin);
+    background-color: #515d6f;
+    padding: 100px;
+    max-width: 60%;
+    height: 100%;
+    margin: auto;
+}
+
+html, body, #root {
+    height: 100%;
+}
