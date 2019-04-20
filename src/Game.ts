@@ -36,18 +36,14 @@ class Game {
 
     constructor(options?: Game){
         this.state = options ? options.state : createBoard(4);
-        if (!options){
-            this.state[0][0] = 4;
-            this.state[0][1] = 4;
-            this.state[0][2] = 2;
-            this.state[0][3] = 2;
-
-            this.state[1][0] = 2;
-            this.state[1][3] = 2;
+        if (!options) {
+            this.addPiece();
+            this.addPiece();
         }
     }
 
     addPiece() {
+        console.log("Added");
         let randomX = Math.floor(Math.random() * (4 - 0)) + 0;
         let randomY = Math.floor(Math.random() * (4 - 0)) + 0;
         let board = this.state;

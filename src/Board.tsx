@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './Board.css';
 import Game from './Game';
 
-const Tile: React.SFC<{number?: number}> = (props) => {
+const Tile: React.SFC<{number?: number, class?: string}> = (props) => {
     const styling: any = {
         width: "50px",
         height: "50px",
@@ -18,7 +18,7 @@ const Tile: React.SFC<{number?: number}> = (props) => {
         props.number == 64 ? "#ff6df3" : props.number == 128 ? "#25ff00" :
         props.number == 256 ? "#6faeff" : props.number == 512 ? "#FF33CE" :
         props.number == 1024 ? "#ff6969" : props.number == 2048 ? "#ffd533" : "#ececec";
-    return <span style={styling}><p>{props.number != 0 ? props.number : undefined}</p></span>;
+    return <span className={props.class} style={styling}><p>{props.number != 0 ? props.number : undefined}</p></span>;
 }
 
 class Board extends Component<{}, { game: Game }> {
@@ -78,6 +78,9 @@ class Board extends Component<{}, { game: Game }> {
                 {this.state.game.state.map((i: Array<number>)=>{
                     return <p>
                         {i.map((j: number)=>{
+                            // if (j == 2) {
+                            //     return <Tile class={"overlay"} number={j}/>
+                            // }
                             return <Tile number={j}/>
                         })}
                     </p>;
