@@ -43,7 +43,6 @@ class Game {
     }
 
     addPiece() {
-        console.log("Added");
         let randomX = Math.floor(Math.random() * (4 - 0)) + 0;
         let randomY = Math.floor(Math.random() * (4 - 0)) + 0;
         let board = this.state;

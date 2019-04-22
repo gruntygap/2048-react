@@ -9,7 +9,7 @@ const Tile: React.SFC<{number?: number, class?: string}> = (props) => {
         display: "inline-block",
         borderRadius: "10px",
         verticalAlign: "middle",
-        margin: "0px 10px 0px 10px"
+        margin: "10px 10px 10px 10px"
     };
 
     styling['backgroundColor'] = props.number == 2 ? "#33CEFF" : 
@@ -51,13 +51,6 @@ class Board extends Component<{}, { game: Game }> {
     }
 
     render() {
-        const padding = {
-            padding: '10px',
-            backgroundColor: "purple"
-        }
-
-        const colors = { 0: "none", 2: "pink", 4: "blue" };
-
         return (
             <div className="Board">
                 <p>Testing the colors of the Tiles</p>
@@ -73,17 +66,13 @@ class Board extends Component<{}, { game: Game }> {
                 <Tile number={1024}/>
                 <Tile number={2048}/>
                 <Tile/>
-
                 <p>Beta Game Board</p>
                 {this.state.game.state.map((i: Array<number>)=>{
-                    return <p>
+                    return <div>
                         {i.map((j: number)=>{
-                            // if (j == 2) {
-                            //     return <Tile class={"overlay"} number={j}/>
-                            // }
                             return <Tile number={j}/>
                         })}
-                    </p>;
+                    </div>;
                 })}
             </div>
         );
