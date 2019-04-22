@@ -8,9 +8,12 @@ function createBoard(num: number) {
     for (let i = 0; i < num; i++)
         board[i] = Array(num);
 
+    let count = 0;
     for (let i = 0; i < num; i++) {
         for (let j = 0; j < num; j++) {
-            board[i][j] = 0;
+            let object = {value: 0, key: count};
+            board[i][j] = object;
+            count++;
         }
     }
     return board;
@@ -29,7 +32,12 @@ function rotateLeft(matrix: GameState) {
     return endState;
 }
 
-type GameState = Array<Array<number>>;
+interface IData {
+    value: number;
+    key: number;
+}
+
+type GameState = Array<Array<IData>>;
 
 class Game {
     state!: GameState;
@@ -52,8 +60,8 @@ class Game {
                 console.warn("CANNOT PLACE ANYMORE PIECES?!");
                 break;
             }
-            if (board[randomX][randomY] == 0) {
-                board[randomX][randomY] = 2;
+            if (board[randomX][randomY].value == 0) {
+                board[randomX][randomY].value = 2;
                 pieceSet = true;
             } else {
                 randomX = Math.floor(Math.random() * (4 - 0)) + 0;
@@ -67,7 +75,7 @@ class Game {
         let test = false;
         for (let i = 0; i < 4; i++) {
             for (let j = 0; j < 4; j++) {
-                if (this.state[i][j] == 0) {
+                if (this.state[i][j].value == 0) {
                     return test;
                 }
             }
@@ -75,23 +83,57 @@ class Game {
         return true;
     }
 
+    gameOver() {
+        if (this.boardFull()) {
+            // If there are no places to merge.
+            // Return true
+            for (let i = 0; i < this.state.length; i++) {
+                for (let j = 0; j < this.state.length; j++) {
+                    // Checks the tile to the right
+                    if (j < this.state.length - 1) {
+                        if (this.state[i][j].value == this.state[i][j+1].value)
+                            return false;
+                    }
+                    // Checks the tile to the left
+                    if (j > 0) {
+                        if (this.state[i][j].value == this.state[i][j-1].value)
+                            return false;
+                    }
+                    // Checks the tile above
+                    if (i < this.state.length - 1) {
+                        if (this.state[i][j].value == this.state[i+1][j].value)
+                            return false;
+                    }
+                    // Checks the tile below
+                    if (i > 0) {
+                        if (this.state[i][j].value == this.state[i-1][j].value)
+                            return false;
+                    }
+                }
+            }
+            // Otherwise
+            return true;
+        }
+        return false;
+    }
+
     slideLeft(options?: GameState) {
         let board = options ? options : this.state;
         let hasChanged = false;
-        board = board.map((i: Array<number>) => {
+        board = board.map((i: Array<IData>) => {
             let min = 0
             for (let j = 0; j < i.length; j++) {
-                if (i[j] !== 0) {
+                if (i[j].value !== 0) {
                     for (let k = j; k > min; k--) {
-                        if (i[k-1] === 0) {
-                            i[k-1] = i[k];
-                            i[k] = 0;
+                        if (i[k-1].value === 0) {
+                            i[k-1].value = i[k].value;
+                            i[k].value = 0;
                             hasChanged = true;
                         }
-                        if (i[k-1] === i[k]) {
-                            i[k-1] = i[k-1] + i[k];
+                        if (i[k-1].value === i[k].value) {
+                            i[k-1].value = i[k-1].value + i[k].value;
                             min = k-1;
-                            i[k] = 0;
+                            i[k].value = 0;
                             hasChanged = true;
                             break;
                         }
@@ -105,6 +147,10 @@ class Game {
     }
 
     move(dir: 'left'|'up'|'down'|'left') {
+        if (this.gameOver()) {
+            console.warn("Game over, you lost.");
+            return;
+        }
         let board: GameState = this.state;
         let hasChanged = false;
         if (dir == 'left') {

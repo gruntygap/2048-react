@@ -21,6 +21,11 @@ const Tile: React.SFC<{number?: number, class?: string}> = (props) => {
     return <span className={props.class} style={styling}><p>{props.number != 0 ? props.number : undefined}</p></span>;
 }
 
+interface IData {
+    value: number;
+    key: number;
+}
+
 class Board extends Component<{}, { game: Game }> {
     constructor(props: any) {
         super(props);
@@ -51,6 +56,7 @@ class Board extends Component<{}, { game: Game }> {
     }
 
     render() {
+        let count = -1;
         return (
             <div className="Board">
                 <p>Testing the colors of the Tiles</p>
@@ -67,10 +73,11 @@ class Board extends Component<{}, { game: Game }> {
                 <Tile number={2048}/>
                 <Tile/>
                 <p>Beta Game Board</p>
-                {this.state.game.state.map((i: Array<number>)=>{
-                    return <div>
-                        {i.map((j: number)=>{
-                            return <Tile number={j}/>
+                {this.state.game.state.map((i: Array<IData>)=>{
+                    count++;
+                    return <div key={count}>
+                        {i.map((j: IData)=>{
+                            return <Tile key={j.key} number={j.value}/>
                         })}
                     </div>;
                 })}
