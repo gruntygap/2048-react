@@ -1,3 +1,5 @@
+This Project is running [here](https://gruntygap.github.io/2048-react/).
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
