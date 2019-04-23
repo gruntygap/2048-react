@@ -11,7 +11,7 @@ function createBoard(num: number) {
     let count = 0;
     for (let i = 0; i < num; i++) {
         for (let j = 0; j < num; j++) {
-            let object = {value: 0, key: count};
+            let object = {value: 0, key: count, new: false};
             board[i][j] = object;
             count++;
         }
@@ -35,6 +35,7 @@ function rotateLeft(matrix: GameState) {
 interface IData {
     value: number;
     key: number;
+    new: boolean;
 }
 
 type GameState = Array<Array<IData>>;
@@ -55,6 +56,11 @@ class Game {
         let randomY = Math.floor(Math.random() * (4 - 0)) + 0;
         let board = this.state;
         let pieceSet = false;
+        for (let i = 0; i < this.state.length; i++) {
+            for (let j = 0; j < this.state.length; j++) {
+                board[i][j].new = false;
+            }
+        }
         while (!pieceSet) {
             if (this.boardFull()) {
                 console.warn("CANNOT PLACE ANYMORE PIECES?!");
@@ -62,6 +68,7 @@ class Game {
             }
             if (board[randomX][randomY].value == 0) {
                 board[randomX][randomY].value = 2;
+                board[randomX][randomY].new = true;
                 pieceSet = true;
             } else {
                 randomX = Math.floor(Math.random() * (4 - 0)) + 0;
@@ -73,9 +80,10 @@ class Game {
 
     boardFull() {
         let test = false;
-        for (let i = 0; i < 4; i++) {
-            for (let j = 0; j < 4; j++) {
+        for (let i = 0; i < this.state.length; i++) {
+            for (let j = 0; j < this.state.length; j++) {
                 if (this.state[i][j].value == 0) {
+                    this.state[i][j].new = false;
                     return test;
                 }
             }
@@ -184,6 +192,7 @@ class Game {
         if (hasChanged) {
             this.addPiece();
         }
+        console.log(this.state);
     }
 }
 

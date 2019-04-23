@@ -24,6 +24,7 @@ const Tile: React.SFC<{number?: number, class?: string}> = (props) => {
 interface IData {
     value: number;
     key: number;
+    new: boolean;
 }
 
 class Board extends Component<{}, { game: Game }> {
@@ -77,7 +78,7 @@ class Board extends Component<{}, { game: Game }> {
                     count++;
                     return <div key={count}>
                         {i.map((j: IData)=>{
-                            return <Tile key={j.key} number={j.value}/>
+                            return j.new ? <Tile class={"overlay"} key={j.key} number={j.value}/> : <Tile key={j.key} number={j.value}/>;
                         })}
                     </div>;
                 })}
