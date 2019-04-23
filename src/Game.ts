@@ -51,16 +51,18 @@ class Game {
         }
     }
 
+    removeNew() {
+        for (let i = 0; i < this.state.length; i++) {
+            for (let j = 0; j < this.state.length; j++) {
+                this.state[i][j].new = false;
+            }
+        }
+    }
     addPiece() {
         let randomX = Math.floor(Math.random() * (4 - 0)) + 0;
         let randomY = Math.floor(Math.random() * (4 - 0)) + 0;
         let board = this.state;
         let pieceSet = false;
-        for (let i = 0; i < this.state.length; i++) {
-            for (let j = 0; j < this.state.length; j++) {
-                board[i][j].new = false;
-            }
-        }
         while (!pieceSet) {
             if (this.boardFull()) {
                 console.warn("CANNOT PLACE ANYMORE PIECES?!");
@@ -83,7 +85,6 @@ class Game {
         for (let i = 0; i < this.state.length; i++) {
             for (let j = 0; j < this.state.length; j++) {
                 if (this.state[i][j].value == 0) {
-                    this.state[i][j].new = false;
                     return test;
                 }
             }
@@ -190,9 +191,9 @@ class Game {
         }
         this.state = board;
         if (hasChanged) {
+            this.removeNew();
             this.addPiece();
         }
-        console.log(this.state);
     }
 }
 
