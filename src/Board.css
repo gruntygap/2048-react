@@ -2,10 +2,23 @@
     text-align: center;
     font-size: 1.4em;
     background-color: #515d6f;
-    padding: 100px;
-    max-width: 60%;
-    height: 100%;
+}
+
+.row {
+    display: inline-flex;
+}
+
+.game {
+    text-align: center;
     margin: auto;
+    max-width: min-content;
+}
+
+.gameOver {
+    text-align: center;
+    margin: auto;
+    max-width: min-content;
+    background-color: red;
 }
 
 html, body, #root {

@@ -18,7 +18,7 @@ const Tile: React.SFC<{number?: number, class?: string}> = (props) => {
         props.number == 64 ? "#ff6df3" : props.number == 128 ? "#25ff00" :
         props.number == 256 ? "#6faeff" : props.number == 512 ? "#FF33CE" :
         props.number == 1024 ? "#ff6969" : props.number == 2048 ? "#ffd533" : "#ececec";
-    return <span className={props.class} style={styling}><p>{props.number != 0 ? props.number : undefined}</p></span>;
+    return <span className={props.class} style={styling}><>{props.number != 0 ? props.number : undefined}</></span>;
 }
 
 interface IData {
@@ -58,6 +58,12 @@ class Board extends Component<{}, { game: Game }> {
 
     render() {
         let count = -1;
+        let gameOver: string = this.state.game.gameOver ? "gameOver" : "game";
+        const handleSubmit = (e: React.MouseEvent): void => {
+            e.preventDefault();
+            this.setState({game: new Game()});
+        };
+        const bttn = <button onClick={handleSubmit}>Restart</button>;
         return (
             <div className="Board">
                 <p>Testing the colors of the Tiles</p>
@@ -74,14 +80,20 @@ class Board extends Component<{}, { game: Game }> {
                 <Tile number={2048}/>
                 <Tile/>
                 <p>Beta Game Board</p>
-                {this.state.game.state.map((i: Array<IData>)=>{
-                    count++;
-                    return <div key={count}>
-                        {i.map((j: IData)=>{
-                            return j.new ? <Tile class={"overlay"} key={j.key} number={j.value}/> : <Tile key={j.key} number={j.value}/>;
-                        })}
-                    </div>;
-                })}
+                <div className="score">
+                    <p>{this.state.game.score}</p>
+                    {this.state.game.gameOver ? bttn : <></> }
+                </div>
+                <div className={gameOver}>
+                    {this.state.game.state.map((i: Array<IData>)=>{
+                        count++;
+                        return <div className="row" key={count}>
+                            {i.map((j: IData)=>{
+                                return j.new ? <Tile class={"overlay"} key={j.key} number={j.value}/> : <Tile key={j.key} number={j.value}/>;
+                            })}
+                        </div>;
+                    })}
+                </div>
             </div>
         );
     }

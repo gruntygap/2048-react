@@ -42,9 +42,13 @@ type GameState = Array<Array<IData>>;
 
 class Game {
     state!: GameState;
+    score: number;
+    gameOver: boolean;
 
     constructor(options?: Game){
         this.state = options ? options.state : createBoard(4);
+        this.score = options ? options.score : 0;
+        this.gameOver = options ? options.gameOver : false;
         if (!options) {
             this.addPiece();
             this.addPiece();
@@ -92,7 +96,7 @@ class Game {
         return true;
     }
 
-    gameOver() {
+    isGameOver() {
         if (this.boardFull()) {
             // If there are no places to merge.
             // Return true
@@ -121,6 +125,7 @@ class Game {
                 }
             }
             // Otherwise
+            this.gameOver = true;
             return true;
         }
         return false;
@@ -129,6 +134,7 @@ class Game {
     slideLeft(options?: GameState) {
         let board = options ? options : this.state;
         let hasChanged = false;
+        let pointsGained = 0;
         board = board.map((i: Array<IData>) => {
             let min = 0
             for (let j = 0; j < i.length; j++) {
@@ -139,8 +145,10 @@ class Game {
                             i[k].value = 0;
                             hasChanged = true;
                         }
+                        // Merge section
                         if (i[k-1].value === i[k].value) {
                             i[k-1].value = i[k-1].value + i[k].value;
+                            pointsGained += i[k-1].value;
                             min = k-1;
                             i[k].value = 0;
                             hasChanged = true;
@@ -152,12 +160,14 @@ class Game {
             return i;
         });
         this.state = board;
+        this.score = this.score + pointsGained;
         return hasChanged;
     }
 
     move(dir: 'left'|'up'|'down'|'left') {
-        if (this.gameOver()) {
+        if (this.isGameOver()) {
             console.warn("Game over, you lost.");
+            this.removeNew();
             return;
         }
         let board: GameState = this.state;
