@@ -28,9 +28,14 @@ interface IData {
 }
 
 class Board extends Component<{}, { game: Game }> {
+    startX: number;
+    startY: number;
+
     constructor(props: any) {
         super(props);
         this.handleKeyDown = this.handleKeyDown.bind(this)
+        this.startX = 0;
+        this.startY = 0;
         this.state = {
             game: new Game()
         }
@@ -55,6 +60,43 @@ class Board extends Component<{}, { game: Game }> {
             this.setState({game: newGame});
         }
     }
+
+    handleTouchStart(e: React.TouchEvent<HTMLDivElement>) {
+        if (this.state.game.gameOver) {
+          return;
+        }
+        if (e.touches.length != 1) {
+          return;
+        }
+        this.startX = e.touches[0].screenX;
+        this.startY = e.touches[0].screenY;
+        e.preventDefault();
+      }
+
+      handleTouchEnd(e: React.TouchEvent<HTMLDivElement>) {
+        if (this.state.game.gameOver) {
+          return;
+        }
+        if (e.changedTouches.length != 1) {
+          return;
+        }
+        var deltaX = e.changedTouches[0].screenX - this.startX;
+        var deltaY = e.changedTouches[0].screenY - this.startY;
+        var direction = -1;
+        // Code sourced from:
+        // https://github.com/IvanVergiliev/2048-react/blob/master/src/index.js
+        if (Math.abs(deltaX) > 3 * Math.abs(deltaY) && Math.abs(deltaX) > 30) {
+          direction = deltaX > 0 ? 2 : 0;
+        } else if (Math.abs(deltaY) > 3 * Math.abs(deltaX) && Math.abs(deltaY) > 30) {
+          direction = deltaY > 0 ? 3 : 1;
+        }
+        if (direction != -1) {
+            const labels: Array<'left'|'up'|'right'|'down'> = ['left', 'up', 'right', 'down'];
+            const newGame = new Game(this.state.game);
+            newGame.move(labels[direction]);
+            this.setState({game: newGame});
+        }
+      }
 
     render() {
         let count = -1;
@@ -84,7 +126,7 @@ class Board extends Component<{}, { game: Game }> {
                     <p>{this.state.game.score}</p>
                     {this.state.game.gameOver ? bttn : <></> }
                 </div>
-                <div className={gameOver}>
+                <div className={gameOver} onTouchStart={this.handleTouchStart.bind(this)} onTouchEnd={this.handleTouchEnd.bind(this)}>
                     {this.state.game.state.map((i: Array<IData>)=>{
                         count++;
                         return <div className="row" key={count}>

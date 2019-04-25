@@ -164,7 +164,7 @@ class Game {
         return hasChanged;
     }
 
-    move(dir: 'left'|'up'|'down'|'left') {
+    move(dir: 'left'|'up'|'down'|'right') {
         if (this.isGameOver()) {
             console.warn("Game over, you lost.");
             this.removeNew();
