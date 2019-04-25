@@ -109,22 +109,9 @@ class Board extends Component<{}, { game: Game }> {
         const bttn = <button onClick={handleSubmit}>Restart</button>;
         return (
             <div className="Board">
-                <p>Testing the colors of the Tiles</p>
-                <Tile number={2}/>
-                <Tile number={4}/>
-                <Tile number={8}/>
-                <Tile number={16}/>
-                <Tile number={32}/>
-                <Tile number={64}/>
-                <Tile number={128}/>
-                <Tile number={256}/>
-                <Tile number={512}/>
-                <Tile number={1024}/>
-                <Tile number={2048}/>
-                <Tile/>
-                <p>Beta Game Board</p>
+                <h1>2048</h1>
                 <div className="score">
-                    <p>{this.state.game.score}</p>
+                    <p>Score: {this.state.game.score}</p>
                     {this.state.game.gameOver ? bttn : <></> }
                 </div>
                 <div className={gameOver} onTouchStart={this.handleTouchStart.bind(this)} onTouchEnd={this.handleTouchEnd.bind(this)}>
@@ -137,6 +124,21 @@ class Board extends Component<{}, { game: Game }> {
                         </div>;
                     })}
                 </div>
+                {/* <p>Directions:</p>
+                <p>Use Arrow keys for desktop; use swipe gestures for mobile</p>
+                <p>Testing the colors of the Tiles</p>
+                <Tile number={2}/>
+                <Tile number={4}/>
+                <Tile number={8}/>
+                <Tile number={16}/>
+                <Tile number={32}/>
+                <Tile number={64}/>
+                <Tile number={128}/>
+                <Tile number={256}/>
+                <Tile number={512}/>
+                <Tile number={1024}/>
+                <Tile number={2048}/>
+                <Tile/> */}
             </div>
         );
     }
