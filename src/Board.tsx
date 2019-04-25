@@ -96,6 +96,7 @@ class Board extends Component<{}, { game: Game }> {
             newGame.move(labels[direction]);
             this.setState({game: newGame});
         }
+        e.preventDefault();
       }
 
     render() {
